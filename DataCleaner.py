@@ -84,7 +84,7 @@ class DataCleaner:
 			self.df_orig.iloc[:,x] = self.x.iloc[:,i]
 		for i,x in enumerate(range(2,self.conf.shape[1],3)):
 			self.df_orig.iloc[:,x] = self.y.iloc[:,i]
-		self.df_orig.to_csv(filename)
+		self.df_orig.to_csv(filename, index=False)
 
 
 
