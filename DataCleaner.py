@@ -61,15 +61,15 @@ class DataCleaner:
 
 
 	def remove_body_swaps(self):
-		t0 = np.ndarray(shape=(self.x.shape[0],2,6)) # (time,coord,part)
+		t0 = np.ndarray(shape=(self.x.shape[0],2,self.x.shape[1])) # (time,coord,part)
 		t0[:,0,:] = self.x.to_numpy()
 		t0[:,1,:] = self.y.to_numpy()
 		t_copy = np.copy(t0)
 		t_new = np.copy(t0)
 		for frame in range(1,t0.shape[0]):
 		    k = squareform(pdist(np.concatenate((t0[frame,:,:],t_copy[frame-1,:,:]),axis=1).T))
-		    min_index = np.argmin(k[6:,0:6],axis=0) # minimum index body part 
-		    chng_idx = np.where(min_index-np.arange(0,6)!=0)[0] # gets index of body part to change
+		    min_index = np.argmin(k[self.x.shape[1]:,0:self.x.shape[1]],axis=0) # minimum index body part 
+		    chng_idx = np.where(min_index-np.arange(0,self.x.shape[1])!=0)[0] # gets index of body part to change
 		    t0[frame,:,chng_idx] = t0[frame-1,:,chng_idx] # set to previous frame's value
 		    t_new[frame,:,chng_idx] = np.nan # set to NaN if detected     
 		self.x = pd.DataFrame(t_new[:,0,:],columns=self.body_parts)
